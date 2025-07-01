@@ -9,6 +9,7 @@ let estadisticasData = {};
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
     inicializarApp();
+    inicializarHeaderAutoHide();
 });
 
 // Función principal de inicialización
@@ -42,34 +43,18 @@ function configurarNavegacion() {
     });
 }
 
-// Cambiar entre secciones
-function switchSection(sectionName) {
-    // Actualizar estado
-    currentSection = sectionName;
+// Actualizar título de la página según la sección
+function actualizarTituloPagina(sectionName) {
+    const titulos = {
+        'dashboard': 'Dashboard - Sistema ACID',
+        'clientes': 'Gestión de Clientes - Sistema ACID',
+        'transacciones': 'Transacciones ACID - Sistema ACID',
+        'concurrencia': 'Pruebas de Concurrencia - Sistema ACID',
+        'errores': 'Log de Errores - Sistema ACID',
+        'estadisticas': 'Estadísticas - Sistema ACID'
+    };
     
-    // Ocultar todas las secciones
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Mostrar la sección seleccionada
-    const targetSection = document.getElementById(sectionName);
-    if (targetSection) {
-        targetSection.classList.add('active');
-    }
-    
-    // Actualizar navegación activa
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    const activeNavItem = document.querySelector(`[data-section="${sectionName}"]`);
-    if (activeNavItem) {
-        activeNavItem.classList.add('active');
-    }
-    
-    // Cargar datos específicos de la sección
-    cargarDatosSeccion(sectionName);
+    document.title = titulos[sectionName] || 'Sistema ACID';
 }
 
 // Cargar datos específicos según la sección
@@ -642,6 +627,170 @@ window.addEventListener('offline', function() {
     mostrarToast('Sin conexión a internet', 'error');
     document.getElementById('estado-servidor').textContent = 'Offline';
 });
+
+// === HEADER AUTO-HIDE ===
+
+let lastScrollTop = 0;
+let headerHeight = 70;
+let isHeaderVisible = true;
+
+// Inicializar funcionalidad de auto-hide del header
+function inicializarHeaderAutoHide() {
+    console.log('🎯 Inicializando Header Auto-Hide...');
+    
+    const header = document.querySelector('.header');
+    
+    // Detectar scroll
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const isMobile = window.innerWidth <= 768;
+        
+        // En móviles solo aplicar modo compacto, no auto-hide
+        if (isMobile) {
+            if (scrollTop > 30) {
+                header.classList.add('compact');
+            } else {
+                header.classList.remove('compact');
+            }
+            // Siempre mostrar header en móviles
+            showHeader();
+        } else {
+            // Solo aplicar auto-hide en desktop después de scrollear un poco
+            if (scrollTop > 100) {
+                if (scrollTop > lastScrollTop && isHeaderVisible) {
+                    // Scrolleando hacia abajo - ocultar header
+                    hideHeader();
+                } else if (scrollTop < lastScrollTop && !isHeaderVisible) {
+                    // Scrolleando hacia arriba - mostrar header
+                    showHeader();
+                }
+                
+                // Aplicar modo compacto cuando hay scroll
+                if (scrollTop > 50) {
+                    header.classList.add('compact');
+                } else {
+                    header.classList.remove('compact');
+                }
+            } else {
+                // En la parte superior - siempre mostrar header normal
+                showHeader();
+                header.classList.remove('compact');
+            }
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+    
+    console.log('✅ Header Auto-Hide inicializado');
+}
+
+// Ocultar header
+function hideHeader() {
+    const header = document.querySelector('.header');
+    header.classList.add('hidden');
+    isHeaderVisible = false;
+    console.log('📤 Header ocultado');
+}
+
+// Mostrar header
+function showHeader() {
+    const header = document.querySelector('.header');
+    header.classList.remove('hidden');
+    isHeaderVisible = true;
+    console.log('📥 Header mostrado');
+}
+
+// === FUNCIONES MÓVILES ===
+
+// Toggle menú móvil
+function toggleMobileMenu() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('mobile-open');
+    
+    // Cambiar icono
+    const icon = document.querySelector('.mobile-menu-btn i');
+    if (sidebar.classList.contains('mobile-open')) {
+        icon.className = 'fas fa-times';
+    } else {
+        icon.className = 'fas fa-bars';
+    }
+}
+
+// Cerrar menú móvil al hacer click fuera
+document.addEventListener('click', function(e) {
+    const sidebar = document.querySelector('.sidebar');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (window.innerWidth <= 768 && 
+        sidebar.classList.contains('mobile-open') && 
+        !sidebar.contains(e.target) && 
+        !menuBtn.contains(e.target)) {
+        
+        sidebar.classList.remove('mobile-open');
+        document.querySelector('.mobile-menu-btn i').className = 'fas fa-bars';
+    }
+});
+
+// Cerrar menú móvil al cambiar sección
+function switchSection(sectionName) {
+    console.log(`🔄 Cambiando a sección: ${sectionName}`);
+    
+    // Cerrar menú móvil si está abierto
+    if (window.innerWidth <= 768) {
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.classList.remove('mobile-open');
+        document.querySelector('.mobile-menu-btn i').className = 'fas fa-bars';
+    }
+    
+    // Actualizar estado
+    currentSection = sectionName;
+    
+    // Ocultar todas las secciones con animación suave
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+        section.style.opacity = '0';
+        setTimeout(() => {
+            if (!section.classList.contains('active')) {
+                section.style.display = 'none';
+            }
+        }, 150);
+    });
+    
+    // Mostrar la sección seleccionada
+    const targetSection = document.getElementById(sectionName);
+    if (targetSection) {
+        setTimeout(() => {
+            targetSection.style.display = 'block';
+            targetSection.classList.add('active');
+            targetSection.style.opacity = '1';
+        }, 150);
+    } else {
+        console.warn(`⚠️ Sección no encontrada: ${sectionName}`);
+        mostrarToast(`Sección "${sectionName}" no encontrada`, 'warning');
+        return;
+    }
+    
+    // Actualizar navegación activa
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    const activeNavItem = document.querySelector(`[data-section="${sectionName}"]`);
+    if (activeNavItem) {
+        activeNavItem.classList.add('active');
+    }
+    
+    // Cargar datos específicos de la sección
+    cargarDatosSeccion(sectionName);
+    
+    // Actualizar título de la página
+    actualizarTituloPagina(sectionName);
+    
+    // Mostrar header al cambiar de sección (UX mejorada)
+    showHeader();
+    
+    console.log(`✅ Sección cambiada a: ${sectionName}`);
+}
 
 // Log para debugging
 console.log('🎨 Frontend JavaScript cargado correctamente'); 

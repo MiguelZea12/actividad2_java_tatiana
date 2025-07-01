@@ -12,58 +12,65 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1><i class="fas fa-database"></i> Sistema ACID - Gestión de Transacciones</h1>
+                <div class="header-left">
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1><i class="fas fa-database floating"></i> Sistema ACID - Gestión de Transacciones</h1>
+                </div>
                 <div class="header-stats">
-                    <div class="stat-item">
+                    <div class="stat-item glow">
                         <i class="fas fa-users"></i>
                         <span id="total-clientes">0</span>
-                        <small>Clientes</small>
+                        <small>Clientes Total</small>
                     </div>
                     <div class="stat-item">
                         <i class="fas fa-exclamation-triangle"></i>
                         <span id="total-errores">0</span>
-                        <small>Errores</small>
+                        <small>Errores Log</small>
                     </div>
                     <div class="stat-item">
                         <i class="fas fa-server"></i>
                         <span id="estado-servidor">Online</span>
-                        <small>Estado</small>
+                        <small>Estado Server</small>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav class="sidebar">
-            <ul class="nav-menu">
-                <li class="nav-item active" data-section="dashboard">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </li>
-                <li class="nav-item" data-section="clientes">
-                    <i class="fas fa-users"></i>
-                    <span>Gestión de Clientes</span>
-                </li>
-                <li class="nav-item" data-section="transacciones">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>Transacciones ACID</span>
-                </li>
-                <li class="nav-item" data-section="concurrencia">
-                    <i class="fas fa-cogs"></i>
-                    <span>Pruebas de Concurrencia</span>
-                </li>
-                <li class="nav-item" data-section="errores">
-                    <i class="fas fa-bug"></i>
-                    <span>Log de Errores</span>
-                </li>
-                <li class="nav-item" data-section="estadisticas">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Estadísticas</span>
-                </li>
-            </ul>
-        </nav>
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Navigation -->
+            <nav class="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-section="clientes">
+                        <i class="fas fa-users"></i>
+                        <span>Gestión de Clientes</span>
+                    </li>
+                    <li class="nav-item" data-section="transacciones">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Transacciones ACID</span>
+                    </li>
+                    <li class="nav-item" data-section="concurrencia">
+                        <i class="fas fa-cogs"></i>
+                        <span>Pruebas de Concurrencia</span>
+                    </li>
+                    <li class="nav-item" data-section="errores">
+                        <i class="fas fa-bug"></i>
+                        <span>Log de Errores</span>
+                    </li>
+                    <li class="nav-item" data-section="estadisticas">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Estadísticas</span>
+                    </li>
+                </ul>
+            </nav>
 
-        <!-- Main Content -->
+            <!-- Main Content -->
         <main class="main-content">
             <!-- Dashboard Section -->
             <section id="dashboard" class="content-section active">
@@ -130,6 +137,56 @@
                         <button class="btn btn-info" onclick="cargarEstadisticas()">
                             <i class="fas fa-sync"></i> Actualizar Stats
                         </button>
+                    </div>
+                </div>
+
+                <!-- Información adicional para testing de scroll -->
+                <div class="dashboard-grid" style="margin-top: 2rem;">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line"></i> Rendimiento del Sistema</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>El sistema está funcionando de manera óptima con transacciones ACID completas.</p>
+                            <p><strong>Transacciones por segundo:</strong> 1,250</p>
+                            <p><strong>Tiempo de respuesta promedio:</strong> 45ms</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-shield-alt"></i> Seguridad y Integridad</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>Todas las propiedades ACID están siendo respetadas correctamente.</p>
+                            <p><strong>Atomicidad:</strong> ✅ Garantizada</p>
+                            <p><strong>Consistencia:</strong> ✅ Verificada</p>
+                            <p><strong>Aislamiento:</strong> ✅ Implementado</p>
+                            <p><strong>Durabilidad:</strong> ✅ Asegurada</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-database"></i> Estado de la Base de Datos</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>PostgreSQL funcionando correctamente con pool de conexiones optimizado.</p>
+                            <p><strong>Conexiones activas:</strong> 8/20</p>
+                            <p><strong>Tamaño de BD:</strong> 2.4 GB</p>
+                            <p><strong>Último backup:</strong> Hace 2 horas</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-history"></i> Actividad Reciente</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="big-number">847</div>
+                            <p>Operaciones completadas en la última hora</p>
+                            <small>📈 +15% comparado con la hora anterior</small>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -353,6 +410,7 @@
                 </div>
             </section>
         </main>
+        </div> <!-- Cierre main-wrapper -->
     </div>
 
     <!-- Loading Overlay -->
