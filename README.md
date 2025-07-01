@@ -279,6 +279,10 @@ Actividad 2: Sistemas de Gestión de Transacciones ACID
 
 ---
 
+## Foto de la aplicacion
+
+![Captura de pantalla de la aplicación](screenshot.png)
+
 ## 🎉 ¡Listo para usar!
 
 1. Configura tu base de datos PostgreSQL
