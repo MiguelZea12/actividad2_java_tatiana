@@ -25,7 +25,7 @@ public class ConcurrencyApiHandler implements HttpHandler {
         this.concurrencyTest = new ConcurrencyTest();
         this.gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) 
-                (src, typeOfSrc, context) -> context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+                (src, _, context) -> context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
             .create();
         this.executor = Executors.newFixedThreadPool(10);
     }

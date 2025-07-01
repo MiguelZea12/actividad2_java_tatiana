@@ -21,7 +21,7 @@ public class ErrorApiHandler implements HttpHandler {
         this.errorLogDAO = new ErrorLogDAO();
         this.gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) 
-                (src, typeOfSrc, context) -> context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+                (src, _, context) -> context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
             .create();
     }
     

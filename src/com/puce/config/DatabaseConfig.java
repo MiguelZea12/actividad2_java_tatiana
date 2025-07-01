@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class DatabaseConfig {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/puce_postgres";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "123456";
+    private static final String DB_PASSWORD = "12345678";
     private static final int MIN_CONNECTIONS = 2;
     private static final int MAX_CONNECTIONS = 10;
     private static final int CONNECTION_TIMEOUT = 30;
