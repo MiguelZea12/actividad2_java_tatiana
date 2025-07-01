@@ -1,6 +1,7 @@
 package com.puce;
 
 import com.puce.service.ClienteService;
+import com.puce.web.WebServer;
 import java.util.Scanner;
 
 public class Main {
@@ -13,10 +14,45 @@ public class Main {
             Class.forName("org.postgresql.Driver");
             
             ClienteService clienteService = new ClienteService();
+            WebServer webServer = new WebServer();
             Scanner scanner = new Scanner(System.in);
             
             // Crear tablas si no existen
             inicializarBaseDatos();
+            
+            // Mostrar opciones de inicio
+            System.out.println("\n¿Cómo desea ejecutar la aplicación?");
+            System.out.println("1. Interfaz de consola (tradicional)");
+            System.out.println("2. Servidor web + interfaz web");
+            System.out.println("3. Ambos (consola + web)");
+            System.out.print("Seleccione una opción (1-3): ");
+            
+            int modoEjecucion = 1;
+            try {
+                modoEjecucion = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opción inválida, usando interfaz de consola");
+                modoEjecucion = 1;
+            }
+            
+            // Iniciar servidor web si es necesario
+            if (modoEjecucion == 2 || modoEjecucion == 3) {
+                try {
+                    webServer.start();
+                    if (modoEjecucion == 2) {
+                        System.out.println("\n✅ Servidor web iniciado exitosamente!");
+                        System.out.println("🌐 Abra su navegador en: http://localhost:8080");
+                        System.out.println("💡 Presione Enter para detener el servidor...");
+                        scanner.nextLine();
+                        webServer.stop();
+                        scanner.close();
+                        return;
+                    }
+                } catch (Exception e) {
+                    System.err.println("❌ Error al iniciar servidor web: " + e.getMessage());
+                    System.out.println("Continuando solo con interfaz de consola...");
+                }
+            }
             
             int opcion;
             do {
@@ -72,6 +108,11 @@ public class Main {
             
             // Cerrar scanner
             scanner.close();
+            
+            // Cerrar servidor web si está corriendo
+            if (modoEjecucion == 3) {
+                webServer.stop();
+            }
             
             // Cerrar conexiones
             com.puce.config.DatabaseConfig.getInstance().closeAllConnections();
