@@ -6,6 +6,10 @@ import com.puce.dao.ClienteDAO;
 import com.puce.dao.ErrorLogDAO;
 import com.puce.model.LogError;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSerializer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,7 +24,10 @@ public class StatsApiHandler implements HttpHandler {
     public StatsApiHandler() {
         this.clienteDAO = new ClienteDAO();
         this.errorLogDAO = new ErrorLogDAO();
-        this.gson = new Gson();
+        this.gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) 
+                (src, typeOfSrc, context) -> context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+            .create();
     }
     
     @Override

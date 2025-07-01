@@ -5,6 +5,10 @@ import com.sun.net.httpserver.HttpExchange;
 import com.puce.dao.ErrorLogDAO;
 import com.puce.model.LogError;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSerializer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -15,7 +19,10 @@ public class ErrorApiHandler implements HttpHandler {
     
     public ErrorApiHandler() {
         this.errorLogDAO = new ErrorLogDAO();
-        this.gson = new Gson();
+        this.gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) 
+                (src, typeOfSrc, context) -> context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+            .create();
     }
     
     @Override

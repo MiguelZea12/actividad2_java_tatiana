@@ -5,7 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 import com.puce.dao.ClienteDAO;
 import com.puce.model.Cliente;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStreamReader;
@@ -20,7 +24,10 @@ public class ClienteApiHandler implements HttpHandler {
     
     public ClienteApiHandler() {
         this.clienteDAO = new ClienteDAO();
-        this.gson = new Gson();
+        this.gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) 
+                (src, typeOfSrc, context) -> context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+            .create();
     }
     
     @Override
